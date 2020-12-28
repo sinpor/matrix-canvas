@@ -11,6 +11,10 @@ function getRandomChar() {
 	return CHARS[i]
 }
 
+function getAlpha(current: number, total: number): number {
+	return current / total
+}
+
 function hanldeLoad() {
 	const canvas: HTMLCanvasElement = document.querySelector("#canvas")
 	const { clientWidth, clientHeight } = document.body
@@ -21,8 +25,7 @@ function hanldeLoad() {
 	const { width, height } = canvas
 
 	const fw = 15,
-		fh = 10
-
+		fh = 15
 	function drawText(pos: number[]) {
 		ctx.clearRect(0, 0, width, height)
 		ctx.save()
@@ -32,24 +35,24 @@ function hanldeLoad() {
 
 		ctx.save()
 		ctx.fillStyle = "rgb(0, 255, 0)"
-		ctx.font = "18px"
+		ctx.font = "16px Arial"
 		ctx.textAlign = "start"
 		ctx.textBaseline = "middle"
-		ctx.restore()
 		for (let i = fw / 2; i < width; i += fw) {
 			for (let j = 0; j < height; j += fh) {
-				ctx.save()
 				const index = Math.floor(i / fw)
 
+				const alpha = getAlpha(j, pos[index])
+
 				if (pos[index] >= j) {
-					ctx.fillStyle = "rgb(0,255,0)"
+					ctx.fillStyle = `rgba(0, 255, 0, ${alpha})`
 				} else {
-					ctx.fillStyle = "rgb(0,0,0)"
+					ctx.fillStyle = `rgba(0, 0, 0, ${alpha})`
 				}
 				ctx.fillText(getRandomChar(), i, j)
-				ctx.restore()
 			}
 		}
+		ctx.restore()
 	}
 
 	let timeCount = -1
@@ -73,3 +76,7 @@ function hanldeLoad() {
 	animation()
 }
 window.onload = hanldeLoad
+
+window.onresize = function() {
+	location.reload()
+}
